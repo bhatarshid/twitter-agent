@@ -1,0 +1,23 @@
+{
+  "name": "twitter-agent",
+  "version": "1.0.0",
+  "description": "Agent to automate twitter",
+  "main": "index.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "nodemon index.ts"
+  },
+  "author": "arshid",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "puppeteer": "^24.5.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  }
+}
