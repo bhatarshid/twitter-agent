@@ -6,14 +6,15 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "nodemon index.ts"
+    "dev:run": "nodemon index.ts",
+    "dev": "ts-node index.ts"
   },
   "author": "arshid",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
-    "puppeteer": "^24.5.0"
+    "puppeteer": "^24.6.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.9",
