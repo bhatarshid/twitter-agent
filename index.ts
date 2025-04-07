@@ -27,7 +27,7 @@ const runX = async () => {
     }, 10000);
   }
   catch (error) {
-    console.log({ error });
+    console.log({ error: error });
     await browser.close();
   }
 }
