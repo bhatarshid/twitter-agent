@@ -1,11 +1,14 @@
 import { Page } from "puppeteer";
 import { 
+  commentButtonId,
+  commentInputId,
   followingText, 
   likeId, 
   replyId, 
   tweetId, 
   tweetTextId 
 } from "../utils/constants";
+import { automateRetweet } from "./automate-retweet";
 
 export const retweetService = async (page: Page) => {
   try {
@@ -39,18 +42,20 @@ export const retweetService = async (page: Page) => {
         console.log({ likeCount });
 
         // if likes > 500, click the comment button
-        if (likeCount > 500) {
+        if (likeCount > 5) {
           // send this tweetText to GPT to get the reply
-
+          const retweetText = await automateRetweet(tweetText);
+          console.log({ retweetText });
 
           // Commenting on the tweet
           const commentButton = await tweet.$(replyId);
           if (commentButton) {
             await commentButton.click();
-
-            // Wait for the comment dialog to open
-
-            // Type the reply
+            
+            await page.waitForSelector(commentInputId);
+            await page.type(commentInputId, 'retweetText', { delay: 100 });
+            await page.waitForSelector(commentButtonId);;
+            await page.click(commentButtonId);
           }
         }
       }

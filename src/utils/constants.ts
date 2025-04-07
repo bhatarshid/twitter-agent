@@ -11,3 +11,5 @@ export const tweetTextId = '[data-testid="tweetText"]';
 export const tweetId = '[data-testid="tweet"]';
 export const likeId = '[data-testid="like"]';
 export const replyId = '[data-testid="reply"]';
+export const commentInputId = '[data-testid="tweetTextarea_0"]';
+export const commentButtonId = '[data-testid="tweetButton"]';

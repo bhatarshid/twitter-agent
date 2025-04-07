@@ -3,7 +3,6 @@ import signinService from "./src/services/signin-service";
 import { retweetService } from "./src/services/retweet-service";
 require('dotenv').config();
 
-
 const X_URL: string = process.env.X_URL!;
 
 const main = async () => {
@@ -11,7 +10,7 @@ const main = async () => {
   const browser: Browser = await puppeteer.launch({ headless: false });
   try {
     // open new page
-    console.log("Opening website...")
+    console.log("Opening website...");
     const page = await browser.newPage();
     await page.goto(X_URL);
 
