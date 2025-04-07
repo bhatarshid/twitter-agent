@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const X_URL: string = process.env.X_URL!;
 
-const main = async () => {
+const runX = async () => {
   // start browser
   const browser: Browser = await puppeteer.launch({ headless: false });
   try {
@@ -15,7 +15,7 @@ const main = async () => {
     await page.goto(X_URL);
 
     // signin
-    await signinService(page);
+    await signinService(page, browser);
 
     await page.waitForNavigation({ waitUntil: "networkidle2" });
 
@@ -32,4 +32,4 @@ const main = async () => {
   }
 }
 
-main();
+runX();
