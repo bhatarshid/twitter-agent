@@ -13,3 +13,4 @@ export const likeId = '[data-testid="like"]';
 export const replyId = '[data-testid="reply"]';
 export const commentInputId = '[data-testid="tweetTextarea_0"]';
 export const commentButtonId = '[data-testid="tweetButton"]';
+export const commentBoxCloseId = '[data-testid="app-bar-close"]';
