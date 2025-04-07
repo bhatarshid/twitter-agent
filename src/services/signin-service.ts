@@ -36,6 +36,7 @@ const signinService = async (page: Page, browser: Browser) => {
       console.log("Cookies invalid or expired. Logging in again...");
       await loginWithCredentials(page, browser);
     }
+    return;
   }
   else {
     // If no cookies are available, perform login with credentials
