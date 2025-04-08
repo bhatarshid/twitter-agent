@@ -7,13 +7,30 @@ import signinService from "./signin-service";
 const X_URL: string = process.env.X_URL!;
 
 export default async function runX () {
-  // start browser
-  const browser: Browser = await puppeteer.launch({ headless: false });
+  // start browser with additional configuration
+  const browser: Browser = await puppeteer.launch({ 
+    headless: false,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-accelerated-2d-canvas',
+      '--disable-gpu'
+    ],
+    timeout: 60000 // Increase browser launch timeout to 60 seconds
+  });
+
   try {
     // open new page
     console.log("Opening website...");
     const page = await browser.newPage();
-    await page.goto(X_URL);
+    
+    // Set a longer navigation timeout and wait until network is idle
+    await page.setDefaultNavigationTimeout(60000); // 60 seconds timeout
+    await page.goto(X_URL, { 
+      waitUntil: 'networkidle0',
+      timeout: 60000 
+    });
 
     // signin
     await signinService(page, browser);

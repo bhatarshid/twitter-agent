@@ -1,11 +1,16 @@
 'use client'
+import axios from 'axios';
 import { FaRobot, FaTwitter, FaCog, FaChartLine, FaLock, FaComments, FaGithub } from 'react-icons/fa';
 
 export default function Home() {
 
   const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    
+    try {
+      await axios.get('/api/run');
+    } catch (error) {
+      console.error('Error running X automation:', error);
+    }
   }
 
   return (
