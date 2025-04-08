@@ -1,14 +1,16 @@
 import { Browser, Page } from "puppeteer";
-import { loadCookies, loginButtonText, 
+import 'dotenv/config';
+import { 
+  tweetTextId, 
+  X_cookiesExist, 
+  loadCookies, 
+  saveCookies, 
+  signinButton, 
   loginEmailTextbox, 
   loginNextButtonText, 
   loginPasswordTextbox, 
-  signinButton, 
-  tweetTextId, 
-  X_cookiesExist
-} from "../utils";
-import { saveCookies } from "../utils";
-require('dotenv').config();
+  loginButtonText 
+} from "@/lib/utils";
 
 const emailCred = process.env.EMAIL_CREDENTIALS!
 const passwordCred = process.env.PASSWORD_CREDENTIALS!

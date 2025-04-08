@@ -1,25 +1,31 @@
 {
   "name": "twitter-agent",
-  "version": "1.0.0",
-  "description": "Agent to automate twitter",
-  "main": "index.ts",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "dev:run": "nodemon index.ts",
-    "dev": "ts-node index.ts"
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "author": "arshid",
-  "license": "ISC",
   "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "next": "15.2.4",
     "axios": "^1.8.4",
     "dotenv": "^16.4.7",
-    "express": "^5.1.0",
     "puppeteer": "^24.6.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.8.2"
+    "typescript": "^5",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@tailwindcss/postcss": "^4",
+    "tailwindcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "15.2.4",
+    "@eslint/eslintrc": "^3",
+    "ts-node": "^10.9.2"
   }
 }

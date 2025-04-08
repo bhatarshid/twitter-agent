@@ -1,14 +1,14 @@
 import { Page, ElementHandle } from "puppeteer";
-import { 
+import {
   commentButtonId,
   commentInputId,
-  likeId, 
-  replyId, 
-  tweetId, 
-  tweetTextId 
-} from "../utils/constants";
+  likeId,
+  replyId,
+  tweetId,
+  tweetTextId,
+  delay
+} from "@/lib/utils";
 import { automateRetweet } from "./automate-reply";
-import { delay } from "../utils";
 
 // Configuration
 const CONFIG = {
@@ -32,7 +32,7 @@ export const processFollowingTweets = async (page: Page) => {
 
       for (const tweet of tweets) {
         if (tweetIndex >= CONFIG.maxTweets) break;
-        
+
         let retryCount = 0;
         while (retryCount < CONFIG.maxRetries) {
           try {
@@ -40,12 +40,12 @@ export const processFollowingTweets = async (page: Page) => {
             const isAttached = await page.evaluate(element => {
               return !!element.isConnected;
             }, tweet);
-            
+
             if (!isAttached) {
               console.log(`Skipping tweet ${tweetIndex}: Tweet element is no longer attached to DOM`);
               break;
             }
-            
+
             await processTweet(page, tweet, tweetIndex);
             break;
           } catch (error) {
@@ -84,15 +84,13 @@ const processTweet = async (page: Page, tweet: ElementHandle<Element>, tweetInde
     }
 
     const tweetText = await page.evaluate((el: Element) => el?.textContent || '', tweetTextElement);
-    
+
     // Get likes count
     const likeCountElement = await tweet.$(likeId);
     if (!likeCountElement) {
       console.log(`Skipping tweet ${tweetIndex}: No like count element found`);
       return;
     }
-    await likeCountElement.click();
-    await delay(10000);
 
     const likeCount = await page.evaluate((el: Element) => {
       const text = el?.textContent || '0';
@@ -118,8 +116,8 @@ const processTweet = async (page: Page, tweet: ElementHandle<Element>, tweetInde
       await page.click(commentButtonId);
 
       // Random delay between actions
-      const waitTime = Math.floor(Math.random() * 
-        (CONFIG.maxDelayBetweenActions - CONFIG.minDelayBetweenActions)) + 
+      const waitTime = Math.floor(Math.random() *
+        (CONFIG.maxDelayBetweenActions - CONFIG.minDelayBetweenActions)) +
         CONFIG.minDelayBetweenActions;
       console.log(`Waiting ${waitTime / 1000} seconds before next action...`);
       await delay(waitTime);
