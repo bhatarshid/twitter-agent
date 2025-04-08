@@ -23,8 +23,8 @@ const callGeminiAPI = async (tweet: string) => {
 export const automateRetweet = async (tweet: string) => {
   try {
     // get the retweet text from gpt
-    const prompt =  `Craft a thoughtful, engaging, and mature reply to the following tweet: "${tweet}".Ensure the reply is relevant, insightful, and adds value to the conversation. It should reflect empathy and professionalism, and avoid sounding too casual or superficial. Also it should be 300 characters or less.and it should not go against twitter Community Standards on spam.so you will have to try your best to humanize the reply. Provide the reply directly without any other text.`;
-  
+    const prompt = `Craft a thoughtful, engaging, and mature reply to the following tweet: "${tweet}".Ensure the reply is relevant, insightful, and adds value to the conversation. It should reflect empathy and professionalism, and avoid sounding too casual or superficial. Also it should be 300 characters or less.and it should not go against twitter Community Standards on spam.so you will have to try your best to humanize the reply. Provide the reply directly without any other text.`;
+
     return await callGeminiAPI(prompt);
   }
   catch (error) {

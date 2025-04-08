@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { Cookie } from 'puppeteer';
 
 const COOKIES_PATH = "./cookies/XCookies.json";
 
@@ -33,7 +34,7 @@ export async function X_cookiesExist(): Promise<boolean> {
 }
 
 
-export const saveCookies = async (cookies: any) => {
+export const saveCookies = async (cookies: Cookie[]) => {
   try {
     const dir = path.dirname(COOKIES_PATH);
     await fs.promises.mkdir(dir, { recursive: true });
@@ -45,7 +46,7 @@ export const saveCookies = async (cookies: any) => {
   }
 }
 
-export async function loadCookies(): Promise<any[]> {
+export async function loadCookies() {
   try {
     // Check if the file exists
     await fs.promises.access(COOKIES_PATH);
