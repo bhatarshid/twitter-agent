@@ -7,7 +7,7 @@ import {
   tweetId, 
   tweetTextId 
 } from "../utils/constants";
-import { automateRetweet } from "./automate-retweet";
+import { automateRetweet } from "./automate-reply";
 import { delay } from "../utils";
 
 // Configuration
