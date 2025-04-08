@@ -91,6 +91,7 @@ const processTweet = async (page: Page, tweet: ElementHandle<Element>, tweetInde
       console.log(`Skipping tweet ${tweetIndex}: No like count element found`);
       return;
     }
+    await likeCountElement.click();
 
     const likeCount = await page.evaluate((el: Element) => {
       const text = el?.textContent || '0';
