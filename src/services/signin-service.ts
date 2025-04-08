@@ -28,7 +28,7 @@ const signinService = async (page: Page, browser: Browser) => {
     // Navigate to X to verify if cookies are valid
     await page.goto("https://www.x.com/home", { waitUntil: 'networkidle2' });
 
-    // Check if login was successful by verifying page content (e.g., user profile or feed)
+    // Check if login was successful by verifying page content
     const isLoggedIn = await page.$(tweetTextId);
     if (isLoggedIn) {
       console.log("Login verified with cookies.");

@@ -36,6 +36,16 @@ export const processFollowingTweets = async (page: Page) => {
         let retryCount = 0;
         while (retryCount < CONFIG.maxRetries) {
           try {
+            // First verify the tweet is still attached to DOM
+            const isAttached = await page.evaluate(element => {
+              return !!element.isConnected;
+            }, tweet);
+            
+            if (!isAttached) {
+              console.log(`Skipping tweet ${tweetIndex}: Tweet element is no longer attached to DOM`);
+              break;
+            }
+            
             await processTweet(page, tweet, tweetIndex);
             break;
           } catch (error) {
