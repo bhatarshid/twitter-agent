@@ -12,11 +12,9 @@ export default async function runX () {
     headless: false,
     args: [
       '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-accelerated-2d-canvas',
-      '--disable-gpu'
+      '--disable-setuid-sandbox'
     ],
+    executablePath: process.env.NODE_ENV === 'production' ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
     timeout: 60000 // Increase browser launch timeout to 60 seconds
   });
 
@@ -28,7 +26,7 @@ export default async function runX () {
     // Set a longer navigation timeout and wait until network is idle
     await page.setDefaultNavigationTimeout(60000); // 60 seconds timeout
     await page.goto(X_URL, { 
-      waitUntil: 'networkidle0',
+      waitUntil: ['networkidle0', 'domcontentloaded'],
       timeout: 60000 
     });
 
