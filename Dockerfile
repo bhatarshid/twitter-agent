@@ -1,8 +1,7 @@
 FROM ghcr.io/puppeteer/puppeteer:24.6.0
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
-    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable \
-    PUPPETEER_ARGS="--no-sandbox --disable-setuid-sandbox --disable-dev-shm-usage --disable-gpu"
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
 WORKDIR /usr/src/app
 
@@ -17,8 +16,5 @@ COPY . .
 
 # Build the Next.js application
 RUN npm run build
-
-# Expose the port the app runs on
-EXPOSE 3000
 
 CMD ["npm", "start"]
