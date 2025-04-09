@@ -7,14 +7,19 @@ import signinService from "./signin-service";
 const X_URL: string = process.env.X_URL!;
 
 export default async function runX () {
+  console.log("Starting X automation...", process.env.NODE_ENV);
   // start browser with additional configuration
   const browser: Browser = await puppeteer.launch({ 
     headless: true,
     args: [
       '--no-sandbox',
-      '--disable-setuid-sandbox'
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu'
     ],
-    executablePath: process.env.NODE_ENV === 'production' ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
+    executablePath: process.env.NODE_ENV === 'production' 
+      ? '/usr/bin/google-chrome-stable'
+      : puppeteer.executablePath(),
     timeout: 60000 // Increase browser launch timeout to 60 seconds
   });
 
