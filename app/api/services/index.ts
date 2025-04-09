@@ -9,7 +9,7 @@ const X_URL: string = process.env.X_URL!;
 export default async function runX () {
   // start browser with additional configuration
   const browser: Browser = await puppeteer.launch({ 
-    headless: false,
+    headless: true,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox'
