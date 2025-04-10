@@ -1,19 +1,8 @@
 'use client'
 import Link from 'next/link';
-// import axios from 'axios';
 import { FaRobot, FaTwitter, FaCog, FaChartLine, FaLock, FaComments, FaGithub } from 'react-icons/fa';
 
 export default function Home() {
-
-  // const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   e.preventDefault();
-  //   try {
-  //     await axios.get('/api/run');
-  //   } catch (error) {
-  //     console.error('Error running X automation:', error);
-  //   }
-  // }
-
   return (
     <div className="min-h-screen bg-[#0a0f1a] text-white">
       {/* Hero Section */}
