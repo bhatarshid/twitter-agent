@@ -7,7 +7,7 @@ import {
   tweetId,
   tweetTextId,
   delay
-} from "@/lib/utils";
+} from "@/lib";
 import { automateRetweet } from "./automate-reply";
 
 // Configuration

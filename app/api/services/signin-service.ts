@@ -10,7 +10,7 @@ import {
   loginNextButtonText, 
   loginPasswordTextbox, 
   loginButtonText 
-} from "@/lib/utils";
+} from "@/lib";
 
 const emailCred = process.env.EMAIL_CREDENTIALS!
 const passwordCred = process.env.PASSWORD_CREDENTIALS!

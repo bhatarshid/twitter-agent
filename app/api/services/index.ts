@@ -1,13 +1,12 @@
 import puppeteer, { Browser } from "puppeteer";
 import 'dotenv/config';
-import { followingText } from "@/lib/utils";
+import { followingText } from "@/lib";
 import { processFollowingTweets } from "./process-tweet-service";
 import signinService from "./signin-service";
 
 const X_URL: string = process.env.X_URL!;
 
 export default async function runX () {
-  console.log("Starting X automation...", process.env.NODE_ENV);
   // start browser with additional configuration
   const browser: Browser = await puppeteer.launch({ 
     headless: true,
