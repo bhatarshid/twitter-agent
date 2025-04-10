@@ -1,17 +1,18 @@
 'use client'
-import axios from 'axios';
+import Link from 'next/link';
+// import axios from 'axios';
 import { FaRobot, FaTwitter, FaCog, FaChartLine, FaLock, FaComments, FaGithub } from 'react-icons/fa';
 
 export default function Home() {
 
-  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    try {
-      await axios.get('/api/run');
-    } catch (error) {
-      console.error('Error running X automation:', error);
-    }
-  }
+  // const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   e.preventDefault();
+  //   try {
+  //     await axios.get('/api/run');
+  //   } catch (error) {
+  //     console.error('Error running X automation:', error);
+  //   }
+  // }
 
   return (
     <div className="min-h-screen bg-[#0a0f1a] text-white">
@@ -22,9 +23,9 @@ export default function Home() {
         <p className="text-gray-400 mb-8">
           Automate your Twitter engagement with AI-powered responses using Gemini API
         </p>
-        <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center" onClick={handleClick}>
-          Launch Bot <span className="ml-2">🚀</span>
-        </button>
+        <Link href="/login" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center" >
+          Get Started
+        </Link>
       </div>
 
       {/* Features Section */}
