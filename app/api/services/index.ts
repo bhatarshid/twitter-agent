@@ -2,12 +2,15 @@ import puppeteer, { Browser } from "puppeteer";
 import 'dotenv/config';
 import { followingText } from "@/lib";
 import { processFollowingTweets } from "./process-tweet-service";
-import signinService from "./signin-service";
+import { getSocket } from "@/config/socket"; // Import the socket instance
+import loginWithCredentials from "./signin-service";
 
 const X_URL: string = process.env.X_URL!;
 
 export default async function runX () {
-  // start browser with additional configuration
+  const socket = getSocket();
+  socket.connect();
+
   const browser: Browser = await puppeteer.launch({ 
     headless: true,
     args: [
@@ -23,32 +26,34 @@ export default async function runX () {
   });
 
   try {
-    // open new page
     console.log("Opening website...");
+    socket.emit('log', 'Opening website...'); 
+
     const page = await browser.newPage();
-    
-    // Set a longer navigation timeout and wait until network is idle
     await page.setDefaultNavigationTimeout(60000); // 60 seconds timeout
     await page.goto(X_URL, { 
       waitUntil: ['networkidle0', 'domcontentloaded'],
       timeout: 60000 
     });
 
-    // signin
-    await signinService(page, browser);
+    await loginWithCredentials(page);
+    socket.emit('log', 'Signed in successfully'); 
 
     console.log("Redirecting to Following page...");
+    socket.emit('log', 'Redirecting to Following page...');
+
     await page.waitForSelector(followingText);
     await page.click(followingText);
-    await processFollowingTweets(page);
+    await processFollowingTweets(page, socket);
 
-    // wait for 10 seconds and close browser
     setTimeout(async () => {
       await browser.close();
+      socket.emit('log', 'Browser closed'); 
     }, 10000);
   }
   catch (error) {
     console.log({ error: error });
+    socket.emit('error', error); // Emit error messages
     await browser.close();
   }
 }
