@@ -5,8 +5,8 @@
     "outDir": "dist",
     "lib": ["es2019"],
     "target": "es2019",
-    "isolatedModules": false,
-    "noEmit": false
+    "isolatedModules": true, // Ensure compatibility with ts-node
+    "noEmit": true           // Align with the base tsconfig.json
   },
   "include": ["server.ts"]
 }
