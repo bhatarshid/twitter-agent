@@ -46,7 +46,7 @@ async function startServer() {
       console.log(err);
       process.exit(1);
     })
-    .listen(port, () => {
+    .listen(port, '0.0.0.0', () => {
       console.log(`Ready on http://${hostname}:${port}`);
     });
 }
