@@ -7,8 +7,9 @@ import {
   tweetId,
   tweetTextId,
   delay
-} from "@/lib/utils";
+} from "@/lib";
 import { automateRetweet } from "./automate-reply";
+import { Server } from "socket.io";
 
 // Configuration
 const CONFIG = {
@@ -20,10 +21,11 @@ const CONFIG = {
   scrollDelay: 1000
 };
 
-export const processFollowingTweets = async (page: Page) => {
+export const processFollowingTweets = async (page: Page, socket: Server) => {
   let tweetIndex = 1;
 
   console.log("Processing tweets...");
+  socket.emit("log", "Processing tweets...");
   while (tweetIndex < CONFIG.maxTweets) {
     try {
       // Get all tweets on the page
@@ -46,13 +48,15 @@ export const processFollowingTweets = async (page: Page) => {
               break;
             }
 
-            await processTweet(page, tweet, tweetIndex);
+            await processTweet(page, tweet, tweetIndex, socket);
             break;
           } catch (error) {
             retryCount++;
             console.error(`Error processing tweet ${tweetIndex} (attempt ${retryCount}/${CONFIG.maxRetries}):`, error);
+            socket.emit('error', `Error processing tweet ${tweetIndex}: ${error}`);
             if (retryCount === CONFIG.maxRetries) {
               console.error(`Failed to process tweet ${tweetIndex} after ${CONFIG.maxRetries} attempts`);
+              socket.emit('error', `Failed to process tweet ${tweetIndex} after ${CONFIG.maxRetries} attempts`);
             } else {
               await delay(CONFIG.minDelayBetweenActions);
             }
@@ -69,12 +73,13 @@ export const processFollowingTweets = async (page: Page) => {
     }
     catch (error) {
       console.error(`Error during tweet processing at index ${tweetIndex}:`, error);
+      socket.emit('error', `Error during tweet processing at index ${tweetIndex}: ${error}`);
       break;
     }
   }
 }
 
-const processTweet = async (page: Page, tweet: ElementHandle<Element>, tweetIndex: number) => {
+const processTweet = async (page: Page, tweet: ElementHandle<Element>, tweetIndex: number, socket: Server) => {
   try {
     // Extract tweet text
     const tweetTextElement = await tweet.$(tweetTextId);
@@ -84,6 +89,7 @@ const processTweet = async (page: Page, tweet: ElementHandle<Element>, tweetInde
     }
 
     const tweetText = await page.evaluate((el: Element) => el?.textContent || '', tweetTextElement);
+    socket.emit('log', `Tweet ${tweetIndex}: ${tweetText}`);
 
     // Get likes count
     const likeCountElement = await tweet.$(likeId);
@@ -92,6 +98,7 @@ const processTweet = async (page: Page, tweet: ElementHandle<Element>, tweetInde
       return;
     }
     await likeCountElement.click();
+    socket.emit('log', `Tweet ${tweetIndex}: Liked`);
 
     const likeCount = await page.evaluate((el: Element) => {
       const text = el?.textContent || '0';
@@ -102,6 +109,7 @@ const processTweet = async (page: Page, tweet: ElementHandle<Element>, tweetInde
     if (likeCount > CONFIG.minLikesThreshold) {
       // Get AI-generated reply
       const replyText = await automateRetweet(tweetText);
+      socket.emit('log', `Tweet ${tweetIndex}: AI-generated reply: ${replyText}`);
 
       // Comment on the tweet
       const commentButton = await tweet.$(replyId);
@@ -121,13 +129,16 @@ const processTweet = async (page: Page, tweet: ElementHandle<Element>, tweetInde
         (CONFIG.maxDelayBetweenActions - CONFIG.minDelayBetweenActions)) +
         CONFIG.minDelayBetweenActions;
       console.log(`Waiting ${waitTime / 1000} seconds before next action...`);
+      socket.emit('log', `Waiting ${waitTime / 1000} seconds before next action...`);
       await delay(waitTime);
     } else {
       console.log(`Skipping tweet ${tweetIndex}: Insufficient likes (${likeCount} < ${CONFIG.minLikesThreshold})`);
+      socket.emit('log', `Skipping tweet ${tweetIndex}: Insufficient likes (${likeCount} < ${CONFIG.minLikesThreshold})`);
     }
   }
   catch (error) {
     console.error(`Error processing tweet ${tweetIndex}:`, error);
+    socket.emit('error', `Error processing tweet ${tweetIndex}: ${error}`);
     throw error;
   }
 }

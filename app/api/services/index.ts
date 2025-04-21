@@ -1,14 +1,15 @@
 import puppeteer, { Browser } from "puppeteer";
 import 'dotenv/config';
-import { followingText } from "@/lib/utils";
+import { followingText } from "@/lib";
 import { processFollowingTweets } from "./process-tweet-service";
-import signinService from "./signin-service";
+import { getSocketServer } from '@/config/socket-server';
+import loginWithCredentials from "./signin-service";
 
 const X_URL: string = process.env.X_URL!;
 
 export default async function runX () {
-  console.log("Starting X automation...", process.env.NODE_ENV);
-  // start browser with additional configuration
+  const io = getSocketServer();
+
   const browser: Browser = await puppeteer.launch({ 
     headless: true,
     args: [
@@ -20,36 +21,38 @@ export default async function runX () {
     executablePath: process.env.NODE_ENV === 'production' 
       ? '/usr/bin/google-chrome-stable'
       : puppeteer.executablePath(),
-    timeout: 60000 // Increase browser launch timeout to 60 seconds
+    timeout: 60000
   });
 
   try {
-    // open new page
     console.log("Opening website...");
+    io.emit('log', 'Opening website...'); 
+
     const page = await browser.newPage();
-    
-    // Set a longer navigation timeout and wait until network is idle
     await page.setDefaultNavigationTimeout(60000); // 60 seconds timeout
     await page.goto(X_URL, { 
       waitUntil: ['networkidle0', 'domcontentloaded'],
       timeout: 60000 
     });
 
-    // signin
-    await signinService(page, browser);
+    await loginWithCredentials(page);
+    io.emit('log', 'Signed in successfully'); 
 
     console.log("Redirecting to Following page...");
+    io.emit('log', 'Redirecting to Following page...');
+
     await page.waitForSelector(followingText);
     await page.click(followingText);
-    await processFollowingTweets(page);
+    await processFollowingTweets(page, io);
 
-    // wait for 10 seconds and close browser
     setTimeout(async () => {
       await browser.close();
+      io.emit('log', 'Browser closed'); 
     }, 10000);
   }
   catch (error) {
     console.log({ error: error });
+    io.emit('error', error); // Emit error messages
     await browser.close();
   }
 }

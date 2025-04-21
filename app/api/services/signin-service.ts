@@ -1,52 +1,52 @@
-import { Browser, Page } from "puppeteer";
+import { Page } from "puppeteer";
 import 'dotenv/config';
 import { 
-  tweetTextId, 
-  X_cookiesExist, 
-  loadCookies, 
-  saveCookies, 
+  // tweetTextId, 
+  // X_cookiesExist, 
+  // loadCookies, 
+  // saveCookies, 
   signinButton, 
   loginEmailTextbox, 
   loginNextButtonText, 
   loginPasswordTextbox, 
   loginButtonText 
-} from "@/lib/utils";
+} from "@/lib";
 
 const emailCred = process.env.EMAIL_CREDENTIALS!
 const passwordCred = process.env.PASSWORD_CREDENTIALS!
 const userIdCred = process.env.USER_ID_CREDENTIALS!
 
-const signinService = async (page: Page, browser: Browser) => {
-  console.log("Signing in...");
+// const signinService = async (page: Page, browser: Browser) => {
+//   console.log("Signing in...");
 
-  // check if cookies exist
-  const checkCookies = await X_cookiesExist();
+//   // check if cookies exist
+//   const checkCookies = await X_cookiesExist();
 
-  if (checkCookies) {
-    const cookies = await loadCookies();
-    await browser.setCookie(...cookies);
-    console.log('Cookies loaded and set on the browser.');
+//   if (checkCookies) {
+//     const cookies = await loadCookies();
+//     await browser.setCookie(...cookies);
+//     console.log('Cookies loaded and set on the browser.');
 
-    // Navigate to X to verify if cookies are valid
-    await page.goto("https://www.x.com/home", { waitUntil: 'networkidle2' });
+//     // Navigate to X to verify if cookies are valid
+//     await page.goto("https://www.x.com/home", { waitUntil: 'networkidle2' });
 
-    // Check if login was successful by verifying page content
-    const isLoggedIn = await page.$(tweetTextId);
-    if (isLoggedIn) {
-      console.log("Login verified with cookies.");
-    } else {
-      console.log("Cookies invalid or expired. Logging in again...");
-      await loginWithCredentials(page, browser);
-    }
-    return;
-  }
-  else {
-    // If no cookies are available, perform login with credentials
-    await loginWithCredentials(page, browser);
-  }
-}
+//     // Check if login was successful by verifying page content
+//     const isLoggedIn = await page.$(tweetTextId);
+//     if (isLoggedIn) {
+//       console.log("Login verified with cookies.");
+//     } else {
+//       console.log("Cookies invalid or expired. Logging in again...");
+//       await loginWithCredentials(page, browser);
+//     }
+//     return;
+//   }
+//   else {
+//     // If no cookies are available, perform login with credentials
+//     await loginWithCredentials(page, browser);
+//   }
+// }
 
-const loginWithCredentials = async (page: Page, browser: Browser) => {
+const loginWithCredentials = async (page: Page) => {
   // click signin
   await page.waitForSelector(signinButton);
   await page.click(signinButton);
@@ -81,9 +81,9 @@ const loginWithCredentials = async (page: Page, browser: Browser) => {
   await page.waitForNavigation({ waitUntil: "networkidle2" });
 
   // save cookies after login
-  const cookies = await browser.cookies();
-  await saveCookies(cookies);
+  // const cookies = await browser.cookies();
+  // await saveCookies(cookies);
   console.log("Signin Complete...")
 }
 
-export default signinService;
+export default loginWithCredentials;
