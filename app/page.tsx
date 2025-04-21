@@ -1,8 +1,21 @@
 'use client'
-import Link from 'next/link';
+// import Link from 'next/link';
 import { FaRobot, FaTwitter, FaCog, FaChartLine, FaLock, FaComments, FaGithub } from 'react-icons/fa';
+// import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import axios from 'axios';
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
+  const [loading, setLoading] = useState(false);
+  // const router = useRouter();
+
+  const handleClick = () => {
+    setLoading(true);
+    axios.get('/api/run');
+    // router.push('/logs');
+  };
+
   return (
     <div className="min-h-screen bg-[#0a0f1a] text-white">
       {/* Hero Section */}
@@ -12,9 +25,9 @@ export default function Home() {
         <p className="text-gray-400 mb-8">
           Automate your Twitter engagement with AI-powered responses using Gemini API
         </p>
-        <Link href="/login" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center" >
-          Get Started
-        </Link>
+        <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center" onClick={handleClick}>
+          {loading ? 'Starting...' : 'Get Started'}
+        </Button>
       </div>
 
       {/* Features Section */}

@@ -1,18 +1,17 @@
 import puppeteer, { Browser } from "puppeteer";
 import 'dotenv/config';
 import { followingText } from "@/lib";
-import { processFollowingTweets } from "./process-tweet-service";
-import { getSocket } from "@/config/socket"; // Import the socket instance
+// import { processFollowingTweets } from "./process-tweet-service";
+import { getSocketServer } from '@/config/socket-server';
 import loginWithCredentials from "./signin-service";
 
 const X_URL: string = process.env.X_URL!;
 
 export default async function runX () {
-  const socket = getSocket();
-  socket.connect();
+  const io = getSocketServer();
 
   const browser: Browser = await puppeteer.launch({ 
-    headless: true,
+    headless: false,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
@@ -22,12 +21,12 @@ export default async function runX () {
     executablePath: process.env.NODE_ENV === 'production' 
       ? '/usr/bin/google-chrome-stable'
       : puppeteer.executablePath(),
-    timeout: 60000 // Increase browser launch timeout to 60 seconds
+    timeout: 60000
   });
 
   try {
     console.log("Opening website...");
-    socket.emit('log', 'Opening website...'); 
+    io.emit('log', 'Opening website...'); 
 
     const page = await browser.newPage();
     await page.setDefaultNavigationTimeout(60000); // 60 seconds timeout
@@ -37,23 +36,23 @@ export default async function runX () {
     });
 
     await loginWithCredentials(page);
-    socket.emit('log', 'Signed in successfully'); 
+    io.emit('log', 'Signed in successfully'); 
 
     console.log("Redirecting to Following page...");
-    socket.emit('log', 'Redirecting to Following page...');
+    io.emit('log', 'Redirecting to Following page...');
 
     await page.waitForSelector(followingText);
     await page.click(followingText);
-    await processFollowingTweets(page, socket);
+    // await processFollowingTweets(page, io);
 
     setTimeout(async () => {
       await browser.close();
-      socket.emit('log', 'Browser closed'); 
+      io.emit('log', 'Browser closed'); 
     }, 10000);
   }
   catch (error) {
     console.log({ error: error });
-    socket.emit('error', error); // Emit error messages
+    io.emit('error', error); // Emit error messages
     await browser.close();
   }
 }

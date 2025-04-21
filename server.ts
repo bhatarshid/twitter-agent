@@ -2,6 +2,7 @@ import { createServer } from 'node:http';
 import next from 'next';
 import { Server } from 'socket.io';
 import 'dotenv/config';
+import { setSocketServer } from './config/socket-server';
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = dev ? process.env.DEV_URL : process.env.PROD_URL;
@@ -10,10 +11,17 @@ const port = +process.env.PORT!;
 const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();
 
-app.prepare().then(() => {
-  const httpServer = createServer(handler);
 
-  const io = new Server(httpServer);
+async function startServer() {
+  await app.prepare()
+  const httpServer = createServer(handler);
+  const io = new Server(httpServer, {
+    cors: {
+      origin: '*',
+    },
+  });
+
+  setSocketServer(io);
 
   io.on("connection", (socket) => {
     socket.on('connect', () => {
@@ -26,7 +34,7 @@ app.prepare().then(() => {
 
     socket.on('log', (data) => {
       console.log(`Socket message: ${data}`);
-    })
+    });
 
     socket.on('test', (data) => {
       console.log(data);
@@ -41,4 +49,6 @@ app.prepare().then(() => {
     .listen(port, () => {
       console.log(`Ready on http://${hostname}:${port}`);
     });
-})
+}
+
+startServer();
