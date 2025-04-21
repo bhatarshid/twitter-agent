@@ -9,7 +9,7 @@ import {
   delay
 } from "@/lib";
 import { automateRetweet } from "./automate-reply";
-import { Socket } from "socket.io-client";
+import { Server } from "socket.io";
 
 // Configuration
 const CONFIG = {
@@ -21,7 +21,7 @@ const CONFIG = {
   scrollDelay: 1000
 };
 
-export const processFollowingTweets = async (page: Page, socket: Socket) => {
+export const processFollowingTweets = async (page: Page, socket: Server) => {
   let tweetIndex = 1;
 
   console.log("Processing tweets...");
@@ -79,7 +79,7 @@ export const processFollowingTweets = async (page: Page, socket: Socket) => {
   }
 }
 
-const processTweet = async (page: Page, tweet: ElementHandle<Element>, tweetIndex: number, socket: Socket) => {
+const processTweet = async (page: Page, tweet: ElementHandle<Element>, tweetIndex: number, socket: Server) => {
   try {
     // Extract tweet text
     const tweetTextElement = await tweet.$(tweetTextId);

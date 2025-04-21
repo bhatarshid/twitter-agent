@@ -1,19 +1,17 @@
 'use client'
 // import Link from 'next/link';
 import { FaRobot, FaTwitter, FaCog, FaChartLine, FaLock, FaComments, FaGithub } from 'react-icons/fa';
-// import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import axios from 'axios';
 import { Button } from '@/components/ui/button';
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
-  // const router = useRouter();
+  const router = useRouter();
 
   const handleClick = () => {
     setLoading(true);
-    axios.get('/api/run');
-    // router.push('/logs');
+    router.push('/login');
   };
 
   return (

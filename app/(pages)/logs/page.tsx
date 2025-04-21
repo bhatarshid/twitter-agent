@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react';
 import { getSocket } from '@/config/socket';
+import axios from 'axios';
 
 export default function LogsPage() {
   const [logs, setLogs] = useState<string[]>([]);
@@ -9,14 +10,17 @@ export default function LogsPage() {
     const socket = getSocket();
     socket.connect();
 
-    const handleLog = (message: string) => {
-      console.log(message); // Log to console
-      setLogs(prev => [...prev, message]);
-    };
-    socket.emit('test', 'test message')
-    socket.on('log', handleLog);
+    socket.on('log', (data) => {
+      console.log(`Socket message page: ${data}`);
+      setLogs((prevLogs) => [...prevLogs, data]);
+    });
+    
+    axios.get('/api/run').catch((err) => {
+      console.error("Error triggering automation:", err);
+    });
 
     return () => {
+      socket.off('log'); // Optional cleanup
       socket.disconnect();
     };
   }, []);

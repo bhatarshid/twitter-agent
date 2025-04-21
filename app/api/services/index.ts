@@ -1,7 +1,7 @@
 import puppeteer, { Browser } from "puppeteer";
 import 'dotenv/config';
 import { followingText } from "@/lib";
-// import { processFollowingTweets } from "./process-tweet-service";
+import { processFollowingTweets } from "./process-tweet-service";
 import { getSocketServer } from '@/config/socket-server';
 import loginWithCredentials from "./signin-service";
 
@@ -43,7 +43,7 @@ export default async function runX () {
 
     await page.waitForSelector(followingText);
     await page.click(followingText);
-    // await processFollowingTweets(page, io);
+    await processFollowingTweets(page, io);
 
     setTimeout(async () => {
       await browser.close();
