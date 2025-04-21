@@ -6,7 +6,7 @@ import { setSocketServer } from './config/socket-server';
 
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = dev ? process.env.DEV_URL : process.env.PROD_URL;
-const port = +process.env.PORT!;
+const port = parseInt(process.env.PORT || '3000', 10);
 
 const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();

@@ -11,7 +11,7 @@ export default async function runX () {
   const io = getSocketServer();
 
   const browser: Browser = await puppeteer.launch({ 
-    headless: false,
+    headless: true,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
