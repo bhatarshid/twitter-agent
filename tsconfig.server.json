@@ -6,7 +6,7 @@
     "lib": ["es2019"],
     "target": "es2019",
     "isolatedModules": true, // Ensure compatibility with ts-node
-    "noEmit": true           // Align with the base tsconfig.json
+    "noEmit": false           // Align with the base tsconfig.json
   },
   "include": ["server.ts"]
 }
