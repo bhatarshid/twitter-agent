@@ -38,7 +38,10 @@ export default function LogsPage() {
     <div className="min-h-screen bg-black text-white p-10">
       <h1 className="text-2xl font-bold mb-1">Activity Logs</h1>
       <p className="text-lg text-gray-500">Monitoring automated Twitter interactions in real-time</p>
-      <div className="bg-[#1a1d26] border border-b-[#353951] min-h-screen p-4 rounded-md space-y-4">
+      <div className="bg-[#1a1d26] border border-b-[#353951] p-4 rounded-md min-h-[80vh] space-y-4">
+        {logs.length === 0 && (
+          <p className="text-gray-600 text-xl text-center">No logs available</p>
+        )}
         {logs.map((log, idx) => (
           <div key={idx} className="">
             {log.type === 'tweet' && (
