@@ -1,10 +1,22 @@
 'use client'
 import { useEffect, useState } from 'react';
 import { getSocket } from '@/config/socket';
+import SystemComponent from '@/components/logs/SystemComponent';
+import TweetComponent from '@/components/logs/TweetComponent';
+import { Clock, Heart, MessageSquare } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import ReplyComponent from '@/components/logs/ReplyComponent';
 // import axios from 'axios';
 
 export default function LogsPage() {
-  const [logs, setLogs] = useState<string[]>([]);
+  interface Log {
+    type: string;
+    text?: string;
+    number?: number;
+    completed?: boolean;
+  }
+
+  const [logs, setLogs] = useState<Log[]>([]);
 
   useEffect(() => {
     const socket = getSocket();
@@ -14,10 +26,6 @@ export default function LogsPage() {
       console.log(`Socket message page: ${data}`);
       setLogs((prevLogs) => [...prevLogs, data]);
     });
-    
-    // axios.get('/api/run').catch((err) => {
-    //   console.error("Error triggering automation:", err);
-    // });
 
     return () => {
       socket.off('log'); // Optional cleanup
@@ -26,12 +34,46 @@ export default function LogsPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-black text-white p-4">
-      <h1 className="text-2xl font-bold mb-4">Logs</h1>
-      <div className="bg-gray-900 p-4 rounded-lg space-y-2 max-h-[80vh] overflow-y-auto">
+    <div className="min-h-screen bg-black text-white p-10">
+      <h1 className="text-2xl font-bold mb-1">Activity Logs</h1>
+      <p className="text-lg text-gray-500">Monitoring automated Twitter interactions in real-time</p>
+      <div className="bg-[#1a1d26] border border-b-[#353951] flex-1 p-4 rounded-md space-y-4">
         {logs.map((log, idx) => (
-          <div key={idx} className="text-sm text-green-400">
-            {log}
+          <div key={idx} className="">
+            {log.type === 'tweet' && (
+              <div className="border-l-4 border-purple-500 pl-4 space-y-2">
+                <TweetComponent
+                  tweetNumber={log?.number}
+                  tweetText={log?.text || ''}
+                />
+                {logs[idx + 1]?.type === 'like' && (
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Badge
+                      variant="outline"
+                      className="bg-pink-900/30 text-pink-400 border-pink-800"
+                    >
+                      <Heart className="h-3 w-3 mr-1" /> Liked
+                    </Badge>
+                    <Badge
+                      variant="outline"
+                      className="bg-green-900/30 text-green-400 border-green-800"
+                    >
+                      <MessageSquare className="h-3 w-3 mr-1" /> AI Reply Generated
+                    </Badge>
+                  </div>
+                )}
+                {logs[idx + 2]?.type === 'reply' && (
+                  <ReplyComponent text={logs[idx + 2]?.text || ''} />
+                )}
+                {logs[idx + 3]?.type === 'wait' && (
+                  <div className="mt-2 text-xs text-gray-500 flex items-center">
+                    <Clock className="h-3 w-3 mr-1" />
+                    {logs[idx + 3]?.text || 'Waiting...'}
+                  </div>
+                )}
+              </div>
+            )}
+            {log.type === 'system' && <SystemComponent text={log?.text || ''} />}
           </div>
         ))}
       </div>
