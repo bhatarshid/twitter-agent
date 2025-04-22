@@ -2,15 +2,12 @@
 // import Link from 'next/link';
 import { FaRobot, FaTwitter, FaCog, FaChartLine, FaLock, FaComments, FaGithub } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 
 export default function Home() {
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleClick = () => {
-    setLoading(true);
     router.push('/login');
   };
 
@@ -23,8 +20,8 @@ export default function Home() {
         <p className="text-gray-400 mb-8">
           Automate your Twitter engagement with AI-powered responses using Gemini API
         </p>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center" onClick={handleClick}>
-          {loading ? 'Starting...' : 'Get Started'}
+        <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center cursor-pointer" onClick={handleClick}>
+          Get Started
         </Button>
       </div>
 

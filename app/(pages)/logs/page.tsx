@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react';
 import { getSocket } from '@/config/socket';
-import axios from 'axios';
+// import axios from 'axios';
 
 export default function LogsPage() {
   const [logs, setLogs] = useState<string[]>([]);
@@ -15,9 +15,9 @@ export default function LogsPage() {
       setLogs((prevLogs) => [...prevLogs, data]);
     });
     
-    axios.get('/api/run').catch((err) => {
-      console.error("Error triggering automation:", err);
-    });
+    // axios.get('/api/run').catch((err) => {
+    //   console.error("Error triggering automation:", err);
+    // });
 
     return () => {
       socket.off('log'); // Optional cleanup

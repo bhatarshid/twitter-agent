@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import runX from '../services';
 
-export async function GET() {
+export async function POST(request: Request) {
   try {
-    await runX();
+    const data = await request.json();
+    await runX(data);
     return NextResponse.json({ message: 'X automation started successfully' }, { status: 200 });
   } catch (error) {
     console.error('Error running X automation:', error);
@@ -12,4 +13,4 @@ export async function GET() {
       { status: 500 }
     );
   }
-} 
+}

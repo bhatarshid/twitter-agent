@@ -12,9 +12,9 @@ import {
   loginButtonText 
 } from "@/lib";
 
-const emailCred = process.env.EMAIL_CREDENTIALS!
-const passwordCred = process.env.PASSWORD_CREDENTIALS!
-const userIdCred = process.env.USER_ID_CREDENTIALS!
+// const emailCred = process.env.EMAIL_CREDENTIALS!
+// const passwordCred = process.env.PASSWORD_CREDENTIALS!
+// const userIdCred = process.env.USER_ID_CREDENTIALS!
 
 // const signinService = async (page: Page, browser: Browser) => {
 //   console.log("Signing in...");
@@ -46,8 +46,12 @@ const userIdCred = process.env.USER_ID_CREDENTIALS!
 //   }
 // }
 
-const loginWithCredentials = async (page: Page) => {
+const loginWithCredentials = async (page: Page, data: {email: string; username: string; password: string}) => {
   // click signin
+  const emailCred = data.email;
+  const passwordCred = data.password;
+  const userIdCred = data.username;
+  
   await page.waitForSelector(signinButton);
   await page.click(signinButton);
 

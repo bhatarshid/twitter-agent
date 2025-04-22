@@ -7,11 +7,11 @@ import loginWithCredentials from "./signin-service";
 
 const X_URL: string = process.env.X_URL!;
 
-export default async function runX () {
+export default async function runX (data: {email: string; username: string; password: string;}) {
   const io = getSocketServer();
 
   const browser: Browser = await puppeteer.launch({ 
-    headless: true,
+    headless: process.env.PROD === 'false' ? false : true,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
@@ -35,7 +35,8 @@ export default async function runX () {
       timeout: 60000 
     });
 
-    await loginWithCredentials(page);
+    io.emit('log', 'Authenticating...');
+    await loginWithCredentials(page, data);
     io.emit('log', 'Signed in successfully'); 
 
     console.log("Redirecting to Following page...");
