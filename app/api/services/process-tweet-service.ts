@@ -25,7 +25,7 @@ export const processFollowingTweets = async (page: Page, socket: Server) => {
   let tweetIndex = 1;
 
   console.log("Processing tweets...");
-  socket.emit("log", "Processing tweets...");
+  socket.emit("log", {text: "Processing tweets...", type: "system"});
   while (tweetIndex < CONFIG.maxTweets) {
     try {
       // Get all tweets on the page
@@ -89,7 +89,7 @@ const processTweet = async (page: Page, tweet: ElementHandle<Element>, tweetInde
     }
 
     const tweetText = await page.evaluate((el: Element) => el?.textContent || '', tweetTextElement);
-    socket.emit('log', `Tweet ${tweetIndex}: ${tweetText}`);
+    socket.emit('log', { text: tweetText, type: 'tweet', number: tweetIndex });
 
     // Get likes count
     const likeCountElement = await tweet.$(likeId);
@@ -98,7 +98,7 @@ const processTweet = async (page: Page, tweet: ElementHandle<Element>, tweetInde
       return;
     }
     await likeCountElement.click();
-    socket.emit('log', `Tweet ${tweetIndex}: Liked`);
+    socket.emit('log', { type: 'like', completed: true });
 
     const likeCount = await page.evaluate((el: Element) => {
       const text = el?.textContent || '0';
@@ -109,7 +109,7 @@ const processTweet = async (page: Page, tweet: ElementHandle<Element>, tweetInde
     if (likeCount > CONFIG.minLikesThreshold) {
       // Get AI-generated reply
       const replyText = await automateRetweet(tweetText);
-      socket.emit('log', `Tweet ${tweetIndex}: AI-generated reply: ${replyText}`);
+      socket.emit('log', { text: replyText, type: 'reply', skip: false });
 
       // Comment on the tweet
       const commentButton = await tweet.$(replyId);
@@ -129,11 +129,11 @@ const processTweet = async (page: Page, tweet: ElementHandle<Element>, tweetInde
         (CONFIG.maxDelayBetweenActions - CONFIG.minDelayBetweenActions)) +
         CONFIG.minDelayBetweenActions;
       console.log(`Waiting ${waitTime / 1000} seconds before next action...`);
-      socket.emit('log', `Waiting ${waitTime / 1000} seconds before next action...`);
+      socket.emit('log', { text: `Waiting ${waitTime / 1000} seconds before next action...`, type: 'wait' });
       await delay(waitTime);
     } else {
       console.log(`Skipping tweet ${tweetIndex}: Insufficient likes (${likeCount} < ${CONFIG.minLikesThreshold})`);
-      socket.emit('log', `Skipping tweet ${tweetIndex}: Insufficient likes (${likeCount} < ${CONFIG.minLikesThreshold})`);
+      socket.emit('log', { text: `Skipping tweet ${tweetIndex}: Insufficient likes (${likeCount} < ${CONFIG.minLikesThreshold})`, type: 'reply', skip: true });
     }
   }
   catch (error) {

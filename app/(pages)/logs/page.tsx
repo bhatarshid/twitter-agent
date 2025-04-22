@@ -14,6 +14,7 @@ export default function LogsPage() {
     text?: string;
     number?: number;
     completed?: boolean;
+    skip?: boolean;
   }
 
   const [logs, setLogs] = useState<Log[]>([]);
@@ -37,7 +38,7 @@ export default function LogsPage() {
     <div className="min-h-screen bg-black text-white p-10">
       <h1 className="text-2xl font-bold mb-1">Activity Logs</h1>
       <p className="text-lg text-gray-500">Monitoring automated Twitter interactions in real-time</p>
-      <div className="bg-[#1a1d26] border border-b-[#353951] flex-1 p-4 rounded-md space-y-4">
+      <div className="bg-[#1a1d26] border border-b-[#353951] min-h-screen p-4 rounded-md space-y-4">
         {logs.map((log, idx) => (
           <div key={idx} className="">
             {log.type === 'tweet' && (
@@ -62,8 +63,11 @@ export default function LogsPage() {
                     </Badge>
                   </div>
                 )}
-                {logs[idx + 2]?.type === 'reply' && (
-                  <ReplyComponent text={logs[idx + 2]?.text || ''} />
+                {logs[idx + 2]?.type === 'reply' && logs[idx+2]?.skip === false && (
+                  <ReplyComponent text={logs[idx + 2]?.text || ''} skip={false} />
+                )}
+                {logs[idx + 2]?.type === 'reply' && logs[idx+2]?.skip === true && (
+                  <ReplyComponent text={logs[idx + 2]?.text || ''} skip={true} />
                 )}
                 {logs[idx + 3]?.type === 'wait' && (
                   <div className="mt-2 text-xs text-gray-500 flex items-center">

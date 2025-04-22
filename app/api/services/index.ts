@@ -26,7 +26,7 @@ export default async function runX (data: {email: string; username: string; pass
 
   try {
     console.log("Opening website...");
-    io.emit('log', 'Opening website...'); 
+    io.emit('log', {text: 'Getting Started...', type: 'system'}); 
 
     const page = await browser.newPage();
     await page.setDefaultNavigationTimeout(60000); // 60 seconds timeout
@@ -35,12 +35,12 @@ export default async function runX (data: {email: string; username: string; pass
       timeout: 60000 
     });
 
-    io.emit('log', 'Authenticating...');
+    io.emit('log', {text: 'Authenticating...', type: 'system'});
     await loginWithCredentials(page, data);
-    io.emit('log', 'Signed in successfully'); 
+    io.emit('log', {text: 'Signed in successfully', type: 'system'}); 
 
     console.log("Redirecting to Following page...");
-    io.emit('log', 'Redirecting to Following page...');
+    io.emit('log', {text: 'Fetching the Tweets of Accounts You Follow...', type: 'system'});
 
     await page.waitForSelector(followingText);
     await page.click(followingText);
@@ -48,7 +48,7 @@ export default async function runX (data: {email: string; username: string; pass
 
     setTimeout(async () => {
       await browser.close();
-      io.emit('log', 'Browser closed'); 
+      io.emit('log', {text: 'Closing browser...', type: 'system'}); 
     }, 10000);
   }
   catch (error) {
