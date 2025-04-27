@@ -1,6 +1,6 @@
 # Twitter Agent
 
-Twitter Agent is a TypeScript-based project designed to automate interactions with X (Twitter). It leverages Puppeteer for browser automation and integrates with the Gemini API for generating content. This project is built with Next.js and TailwindCSS for a modern and scalable development experience.
+Twitter Agent is a TypeScript-based project designed to automate interactions with X (Twitter). It leverages Puppeteer for browser automation, Socket.io to send log messages in real time, and integrates with the Gemini API for generating content. This project is built with Next.js and TailwindCSS for a modern and scalable development experience.
 
 ## Features
 
